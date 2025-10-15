@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VSales – LinkedIn Lead Helper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      width: 360px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 600px;
+    }
+
+    .header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d3748;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header .brand {
+      font-size: 12px;
+      color: #718096;
+      font-weight: 600;
+      background: #f7fafc;
+      padding: 4px 8px;
+      border-radius: 12px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .search-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 12px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .search-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+    .search-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    .search-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .banner {
+      margin: 0 0 20px 0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+    .banner.danger {
+      background: linear-gradient(135deg, #fed7d7, #feb2b2);
+      color: #c53030;
+      display: block;
+    }
+    .banner.ok {
+      background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+      color: #2f855a;
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-section {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .add-btn {
+      background: #fff;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #667eea;
+      font-weight: bold;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .add-btn:hover {
+      background: #667eea;
+      color: white;
+      transform: scale(1.05);
+      border-color: #667eea;
+    }
+
+    .status-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .status-icon.success {
+      background: linear-gradient(135deg, #48bb78, #38a169);
+      color: white;
+      animation: pulse 2s infinite;
+    }
+    .status-icon.empty {
+      background: #cbd5e0;
+      border: 2px solid #e2e8f0;
+    }
+    .status-icon.warn {
+      background: linear-gradient(135deg, #ed8936, #dd6b20);
+      color: white;
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .btn-update {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    .btn-update:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    .helper {
+      font-size: 12px;
+      color: #718096;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .last-updated {
+      margin: 20px 0;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #4a5568;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .refresh-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .refresh-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .metrics-table {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: fadeIn 0.5s ease;
+      margin-top: 16px;
+    }
+    .metrics-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #2d3748;
+      text-align: left;
+    }
+    .metrics-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .metrics-table th {
+      background: #f8f9fa;
+      padding: 8px 4px;
+      text-align: center;
+      font-weight: 600;
+      color: #495057;
+      border-bottom: 1px solid #dee2e6;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .metrics-table td {
+      padding: 8px 4px;
+      border-bottom: 1px solid #f1f3f4;
+      text-align: center;
+      font-weight: 500;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .metrics-table tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+    .metrics-table tr:hover {
+      background: #e9ecef;
+    }
+    .metrics-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Debug styles */
+    .debug {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Explore Lists</h1>
+    <div class="brand">VSales</div>
+  </div>
+
+  <div class="container">
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-row">
+        <input id="urlInput" type="text" class="search-input" placeholder="linkedin.com/in/username" />
+        <button id="searchBtn" class="search-btn">🔍</button>
+      </div>
+    </div>
+
+    <div id="banner" class="banner"></div>
+
+    <!-- Form Section -->
+    <div class="form-section">
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label">👤 Name:</label>
+        <div class="input-group">
+          <input id="nameInput" class="form-input" type="text" placeholder="Full name" />
+          <button id="namePlus" class="add-btn">+</button>
+          <div id="nameStatus" class="status-icon empty"></div>
+        </div>
+      </div>
+
+      <!-- Job Title -->
+      <div class="form-group">
+        <label class="form-label">💼 Job Title:</label>
+        <div class="input-group">
+          <input id="jobInput" class="form-input" type="text" placeholder="Current title" />
+          <button id="jobPlus" class="add-btn">+</button>
+          <div id="jobStatus" class="status-icon empty"></div>
+        </div>
+      </div>
+
+      <!-- Company Name -->
+      <div class="form-group">
+        <label class="form-label">🏢 Company Name:</label>
+        <div class="input-group">
+          <input id="companyInput" class="form-input" type="text" placeholder="Present company" />
+          <button id="companyPlus" class="add-btn">+</button>
+          <div id="companyStatus" class="status-icon empty"></div>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label class="form-label">📞 Phone No.:</label>
+        <div class="input-group">
+          <input id="phoneInput" class="form-input" type="tel" placeholder="+91 9876543210" />
+          <button id="phonePlus" class="add-btn">+</button>
+          <div id="phoneStatus" class="status-icon empty"></div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">✉️ Email ID:</label>
+        <div class="input-group">
+          <input id="emailInput" class="form-input" type="email" placeholder="user@email.com" />
+          <button id="emailPlus" class="add-btn">+</button>
+          <div id="emailStatus" class="status-icon empty"></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <button id="updateBtn" class="btn-update">Update Database</button>
+        <div id="status" class="helper"></div>
+      </div>
+
+      <div id="hint" class="helper"></div>
+    </div>
+
+    <!-- Last Updated -->
+    <div class="last-updated">
+      <span>Last updated on <span id="lastUpdatedValue">-</span></span>
+      <button id="refreshBtn" class="refresh-btn">🔄 Refresh</button>
+    </div>
+
+    <!-- Metrics Table -->
+    <div id="metricsCard" class="metrics-table">
+      <div class="metrics-title">📊 Campaign Metrics</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Bounce</th>
+            <th>Unsubscribed</th>
+            <th>Clicked</th>
+            <th>Enquired</th>
+          </tr>
+        </thead>
+        <tbody id="metricsBody">
+          <tr>
+            <td>Zobble</td>
+            <td>0</td>
+            <td>No</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Violet</td>
+            <td>0</td>
+            <td>No</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>WOM</td>
+            <td>0</td>
+            <td>No</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
